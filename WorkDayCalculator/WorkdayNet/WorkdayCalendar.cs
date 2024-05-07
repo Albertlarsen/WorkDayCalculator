@@ -59,7 +59,7 @@ namespace WorkDayCalculator.WorkdayNet
                 }
             }
 
-            return AdjustTime(incrementedDate);
+            return incrementedDate;
         }
         private DateTime AddFractionTime(DateTime date, decimal fraction)
         {
@@ -181,26 +181,6 @@ namespace WorkDayCalculator.WorkdayNet
             }
 
             return true;
-        }
-
-        private DateTime AdjustTime(DateTime date)
-        {
-            decimal timeWithMinutes = TimeWithMinutes(date.Hour, date.Minute);
-            if (timeWithMinutes >= workdayStop || timeWithMinutes <= workdayStart)
-            {
-                if (timeWithMinutes >= workdayStop && timeWithMinutes < midnight)
-                {
-                    date = date.AddDays(1);
-                    FindNextWorkday(date);
-                }
-
-                if (timeWithMinutes > morning && timeWithMinutes < workdayStart)
-                {
-                    FindNextWorkday(date);
-                }
-            }
-            
-            return date;
         }
         private static decimal TimeWithMinutes(int hour, int minute)
         {
