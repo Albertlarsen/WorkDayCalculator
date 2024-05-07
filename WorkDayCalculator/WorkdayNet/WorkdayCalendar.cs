@@ -10,6 +10,8 @@ namespace WorkDayCalculator.WorkdayNet
         private int stopMinutes;
         decimal midnight = TimeWithMinutes(23, 59);
         decimal morning = TimeWithMinutes(0, 0);
+        private decimal workdayStart;
+        private decimal workdayStop;
 
 
         public void SetHoliday(DateTime date)
@@ -28,6 +30,8 @@ namespace WorkDayCalculator.WorkdayNet
             this.startMinutes = startMinutes;
             this.stopHours = stopHours;
             this.stopMinutes = stopMinutes;
+            workdayStart = TimeWithMinutes(startHours, startMinutes);
+            workdayStop = TimeWithMinutes(stopHours, stopMinutes);
         }
 
         public DateTime GetWorkdayIncrement(DateTime startDate, decimal incrementInWorkdays)
@@ -60,8 +64,6 @@ namespace WorkDayCalculator.WorkdayNet
         private DateTime AddFractionTime(DateTime date, decimal fraction)
         {
             decimal inputTime = TimeWithMinutes(date.Hour, date.Minute);
-            decimal workdayStart = TimeWithMinutes(startHours, startMinutes);
-            decimal workdayStop = TimeWithMinutes(stopHours, stopMinutes);
             decimal workdayFractionHours = fraction * (workdayStop - workdayStart);
     
             if (fraction < 0)
@@ -70,7 +72,7 @@ namespace WorkDayCalculator.WorkdayNet
         
                 if (inputTime < workdayStart || inputTime >= workdayStop)
                 {
-                    return CalculateInregularTime(date, fraction, null);
+                    return CalculateInregularTime(date, workdayFractionHours, null);
                 }
                 
                 if (inputTime >= workdayStart && inputTime < workdayStop)
@@ -80,7 +82,7 @@ namespace WorkDayCalculator.WorkdayNet
                     {
                         var remaningTime = workdayStart - (inputTime + workdayFractionHours);
                         newDate = date.Date.AddHours((double)addValue);
-                        return CalculateInregularTime(newDate, fraction, remaningTime);
+                        return CalculateInregularTime(newDate, workdayFractionHours, remaningTime);
                     }
 
                     return FindNextWorkday(date.Date.AddHours((double)addValue));
@@ -89,10 +91,10 @@ namespace WorkDayCalculator.WorkdayNet
 
             if (inputTime >= workdayStart && inputTime < workdayStop)
             {
-                var resultDate2 = date.Date.AddHours(8 + (double)(inputTime - 8) + (double)workdayFractionHours);
+                var resultDate2 = date.Date.AddHours((double)workdayStart + (double)(inputTime - workdayStart) + (double)workdayFractionHours);
 
-                // will be negative if the the time is after 16:00
-                var remainingTime = 16 - TimeWithMinutes(resultDate2.Hour, resultDate2.Minute);
+                // will be negative if the the time is after workdayStop
+                var remainingTime = workdayStop - TimeWithMinutes(resultDate2.Hour, resultDate2.Minute);
                 if (remainingTime < 0)
                 {
                     resultDate2 = CalculateInregularTime(resultDate2, remainingTime: -remainingTime);
@@ -101,14 +103,14 @@ namespace WorkDayCalculator.WorkdayNet
                 return FindNextWorkday(resultDate2);
             }
 
-            if (inputTime >= 16)
+            if (inputTime >= workdayStop)
             {
-                var resultDate3 = date.Date.AddDays(1).AddHours(8 + (double)workdayFractionHours);
+                var resultDate3 = date.Date.AddDays(1).AddHours((double)workdayStart + (double)workdayFractionHours);
                 
                 return FindNextWorkday(resultDate3);
             }
             
-            var resultDate4 = date.Date.AddHours(8 + (double)workdayFractionHours);
+            var resultDate4 = date.Date.AddHours((double)workdayStart + (double)workdayFractionHours);
     
             while (!IsWorkday(resultDate4))
             {
@@ -118,30 +120,28 @@ namespace WorkDayCalculator.WorkdayNet
             return FindNextWorkday(resultDate4);
         }
 
-        private DateTime CalculateInregularTime(DateTime date, decimal fraction, decimal? remainingTime)
+        private DateTime CalculateInregularTime(DateTime date, decimal calculatedFraction, decimal? remainingTime)
         {
-            decimal workdayFractionHours = fraction * 8;
-            
             decimal time = TimeWithMinutes(date.Hour, date.Minute);
             DateTime newDate = DateTime.MinValue;
 
             if (remainingTime != null)
             {
-                newDate = date.Date.AddHours(16 - (double)remainingTime);
+                newDate = date.Date.AddHours((double)workdayStop - (double)remainingTime);
                 return newDate;
             }
             
-            if (time < 8 && remainingTime == null)
+            if (time < workdayStart && remainingTime == null)
             {
-                newDate = date.Date.AddDays(-1).AddHours(8);
+                newDate = date.Date.AddDays(-1).AddHours((double)workdayStart);
             }
         
-            if (time >= 16)
+            if (time >= workdayStop)
             {
                 newDate = date.Date.AddHours(08);
             }
             
-            var addValue = TimeWithMinutes(newDate.Hour, newDate.Minute) + workdayFractionHours;
+            var addValue = TimeWithMinutes(newDate.Hour, newDate.Minute) + calculatedFraction;
             var resultDate = newDate.AddHours((double)addValue);
             
             return FindNextWorkday(resultDate);
@@ -151,7 +151,7 @@ namespace WorkDayCalculator.WorkdayNet
         {
             DateTime newDate = DateTime.MinValue;
 
-            newDate = date.Date.AddDays(1).AddHours(8 + (double)remainingTime);
+            newDate = date.Date.AddDays(1).AddHours((double)workdayStart + (double)remainingTime);
             return newDate;
         }
 
@@ -186,15 +186,15 @@ namespace WorkDayCalculator.WorkdayNet
         private DateTime AdjustTime(DateTime date)
         {
             decimal timeWithMinutes = TimeWithMinutes(date.Hour, date.Minute);
-            if (timeWithMinutes >= 16 || timeWithMinutes <= 8)
+            if (timeWithMinutes >= workdayStop || timeWithMinutes <= workdayStart)
             {
-                if (timeWithMinutes >= 16 && timeWithMinutes < midnight)
+                if (timeWithMinutes >= workdayStop && timeWithMinutes < midnight)
                 {
                     date = date.AddDays(1);
                     FindNextWorkday(date);
                 }
 
-                if (timeWithMinutes > morning && timeWithMinutes < 8)
+                if (timeWithMinutes > morning && timeWithMinutes < workdayStart)
                 {
                     FindNextWorkday(date);
                 }
