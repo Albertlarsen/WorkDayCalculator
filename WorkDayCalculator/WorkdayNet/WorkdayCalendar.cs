@@ -89,33 +89,33 @@ namespace WorkDayCalculator.WorkdayNet
 
             if (inputTime >= workdayStart && inputTime < workdayStop)
             {
-                var resultDate2 = date.Date.AddHours((double)workdayStart + (double)(inputTime - workdayStart) + (double)workdayFractionHours);
+                newDate = date.Date.AddHours((double)workdayStart + (double)(inputTime - workdayStart) + (double)workdayFractionHours);
 
                 // will be negative if the the time is after workdayStop
-                var remainingTime = workdayStop - TimeWithMinutes(resultDate2.Hour, resultDate2.Minute);
+                var remainingTime = workdayStop - TimeWithMinutes(newDate.Hour, newDate.Minute);
                 if (remainingTime < 0)
                 {
-                    resultDate2 = CalculateInregularTime(resultDate2, remainingTime: -remainingTime);
+                    newDate = CalculateInregularAddedTime(newDate, remainingTime: -remainingTime);
                 }
                 
-                return FindNextWorkday(resultDate2);
+                return FindNextWorkday(newDate);
             }
 
             if (inputTime >= workdayStop)
             {
-                var resultDate3 = date.Date.AddDays(1).AddHours((double)workdayStart + (double)workdayFractionHours);
+                newDate = date.Date.AddDays(1).AddHours((double)workdayStart + (double)workdayFractionHours);
                 
-                return FindNextWorkday(resultDate3);
+                return FindNextWorkday(newDate);
             }
             
-            var resultDate4 = date.Date.AddHours((double)workdayStart + (double)workdayFractionHours);
+            newDate = date.Date.AddHours((double)workdayStart + (double)workdayFractionHours);
     
-            while (!IsWorkday(resultDate4))
+            while (!IsWorkday(newDate))
             {
-                resultDate4 = resultDate4.AddDays(1);
+                newDate = newDate.AddDays(1);
             }
         
-            return FindNextWorkday(resultDate4);
+            return FindNextWorkday(newDate);
         }
 
         private DateTime CalculateSubtractedInregularTime(DateTime date, decimal calculatedFraction, decimal? remainingTime)
@@ -151,7 +151,7 @@ namespace WorkDayCalculator.WorkdayNet
             return FindNextWorkday(resultDate);
         }
         
-        private DateTime CalculateInregularTime(DateTime date, decimal remainingTime)
+        private DateTime CalculateInregularAddedTime(DateTime date, decimal remainingTime)
         {
             DateTime newDate = DateTime.MinValue;
 
