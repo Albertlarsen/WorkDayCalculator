@@ -1,0 +1,14 @@
+/Users/albertlarsen/RiderProjects/WorkDayCalculator/WorkDayCalculator/bin/Debug/net8.0/WorkDayCalculator
+/Users/albertlarsen/RiderProjects/WorkDayCalculator/WorkDayCalculator/bin/Debug/net8.0/WorkDayCalculator.deps.json
+/Users/albertlarsen/RiderProjects/WorkDayCalculator/WorkDayCalculator/bin/Debug/net8.0/WorkDayCalculator.runtimeconfig.json
+/Users/albertlarsen/RiderProjects/WorkDayCalculator/WorkDayCalculator/bin/Debug/net8.0/WorkDayCalculator.dll
+/Users/albertlarsen/RiderProjects/WorkDayCalculator/WorkDayCalculator/bin/Debug/net8.0/WorkDayCalculator.pdb
+/Users/albertlarsen/RiderProjects/WorkDayCalculator/WorkDayCalculator/obj/Debug/net8.0/WorkDayCalculator.GeneratedMSBuildEditorConfig.editorconfig
+/Users/albertlarsen/RiderProjects/WorkDayCalculator/WorkDayCalculator/obj/Debug/net8.0/WorkDayCalculator.AssemblyInfoInputs.cache
+/Users/albertlarsen/RiderProjects/WorkDayCalculator/WorkDayCalculator/obj/Debug/net8.0/WorkDayCalculator.AssemblyInfo.cs
+/Users/albertlarsen/RiderProjects/WorkDayCalculator/WorkDayCalculator/obj/Debug/net8.0/WorkDayCalculator.csproj.CoreCompileInputs.cache
+/Users/albertlarsen/RiderProjects/WorkDayCalculator/WorkDayCalculator/obj/Debug/net8.0/WorkDayCalculator.dll
+/Users/albertlarsen/RiderProjects/WorkDayCalculator/WorkDayCalculator/obj/Debug/net8.0/refint/WorkDayCalculator.dll
+/Users/albertlarsen/RiderProjects/WorkDayCalculator/WorkDayCalculator/obj/Debug/net8.0/WorkDayCalculator.pdb
+/Users/albertlarsen/RiderProjects/WorkDayCalculator/WorkDayCalculator/obj/Debug/net8.0/WorkDayCalculator.genruntimeconfig.cache
+/Users/albertlarsen/RiderProjects/WorkDayCalculator/WorkDayCalculator/obj/Debug/net8.0/ref/WorkDayCalculator.dll
