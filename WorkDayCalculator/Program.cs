@@ -13,7 +13,7 @@ class Program
         
         string format = "dd-MM-yyyy HH:mm";
         
-        // 24-05-2004 22:00 with an addition of -1 work days is 21-05-2004 :00
+        // 24-05-2004 22:00 with an addition of -1 work days is 24-05-2004 8:00
         var start11 = new DateTime(2004, 5, 24, 22, 00, 0);
         decimal increment11 = -1m;
         var incrementedDate11 = calendar.GetWorkdayIncrement(start11, increment11);
@@ -23,6 +23,17 @@ class Program
             increment11 +
             " work days is " +
             incrementedDate11.ToString(format));
+        
+        // 24-05-2004 07:00 with an addition of 1 work days is 25-05-2004 8:00
+        var start12 = new DateTime(2004, 5, 24, 07, 00, 0);
+        decimal increment12 = -1m;
+        var incrementedDate12 = calendar.GetWorkdayIncrement(start12, increment12);
+        Console.WriteLine(
+            start12.ToString(format) +
+            " with an addition of " +
+            increment12 +
+            " work days is " +
+            incrementedDate12.ToString(format));
         
         // 24-05-2004 22:00 with an addition of -2.25 work days is 20-05-2004 14:00
         var start3 = new DateTime(2004, 5, 24, 22, 00, 0);

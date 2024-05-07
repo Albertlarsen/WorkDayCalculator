@@ -57,7 +57,7 @@ namespace WorkDayCalculator.WorkdayNet
                 }
             }
 
-            return incrementedDate;
+            return AdjustTime(incrementedDate);
         }
         private DateTime AddFractionTime(DateTime date, decimal fraction)
         {
@@ -91,7 +91,7 @@ namespace WorkDayCalculator.WorkdayNet
             {
                 newDate = date.Date.AddHours((double)workdayStart + (double)(inputTime - workdayStart) + (double)workdayFractionHours);
 
-                // will be negative if the the time is after workdayStop
+                // will be negative if the the time is later than workdayStop
                 var remainingTime = workdayStop - TimeWithMinutes(newDate.Hour, newDate.Minute);
                 if (remainingTime < 0)
                 {
@@ -147,8 +147,8 @@ namespace WorkDayCalculator.WorkdayNet
             
             var addValue = TimeWithMinutes(newDate.Hour, newDate.Minute) + calculatedFraction;
             var resultDate = newDate.AddHours((double)addValue);
-            
-            return FindNextWorkday(resultDate);
+
+            return FindPreviousWorkday(resultDate);
         }
         
         private DateTime CalculateInregularAddedTime(DateTime date, decimal remainingTime)
@@ -164,6 +164,16 @@ namespace WorkDayCalculator.WorkdayNet
             while (!IsWorkday(date))
             {
                 date = date.AddDays(1);
+            }
+            
+            return date;
+        }
+        
+        private DateTime FindPreviousWorkday(DateTime date)
+        {
+            while (!IsWorkday(date))
+            {
+                date = date.AddDays(-1);
             }
             
             return date;
@@ -186,6 +196,26 @@ namespace WorkDayCalculator.WorkdayNet
 
             return true;
         }
+        
+        private DateTime AdjustTime(DateTime date)
+        {
+            decimal currentTime = TimeWithMinutes(date.Hour, date.Minute);
+
+            if (currentTime >= workdayStop)
+            {
+                date = date.Date.AddHours((double)workdayStart).AddDays(1);
+                date = FindNextWorkday(date);
+            }
+
+            if (currentTime < workdayStart)
+            {
+                date = date.Date.AddHours((double)workdayStart);
+                date = FindPreviousWorkday(date);
+            }
+            
+            return date;
+        }
+        
         private static decimal TimeWithMinutes(int hour, int minute)
         {
             decimal minuteInHours = (decimal)minute / 60;
