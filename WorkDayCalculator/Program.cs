@@ -13,7 +13,6 @@ class Program
         
         string format = "dd-MM-yyyy HH:mm";
         
-        // 24-05-2004 18:05 with an addition of -5.5 work days is 14-05-2004 12:00
         var start8 = new DateTime(2004, 5, 24, 18, 05, 0);
         decimal increment8 = -5.5m;
         var incrementedDate8 = calendar.GetWorkdayIncrement(start8, increment8);
