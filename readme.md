@@ -1,6 +1,8 @@
 To run project
 
-1. Make sure .Net 8 is installed
-2. Open solution file
-3. Adjust the cases you want to test in Program.cs
-4. Run WorkdayCalculator to see output with results
+- Clone repo 
+- Open solution file WorkDayCalculator.sln in IDE 
+- Make sure .Net 8 is installed 
+- Open solution file 
+- Adjust the cases you want to test in Program.cs 
+- Run WorkdayCalculator to see output with results
